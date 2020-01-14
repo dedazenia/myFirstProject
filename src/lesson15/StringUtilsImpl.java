@@ -56,6 +56,7 @@ public class StringUtilsImpl implements StringUtils {
         for (int i = 0; i < doubles.size(); i++) {
             doubles1[i] = Double.valueOf(doubles.get(i));
         }
+
         return new double[0];
     }
 }
