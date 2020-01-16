@@ -1,6 +1,7 @@
 package lesson15;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,27 +37,48 @@ public class StringUtilsImpl implements StringUtils {
 
     @Override
     public int[] findWord(String text, String word) throws NullPointerException {
-        String[] strings = text.split(" ");
+        if (text == null || word == null) {
+            throw new NullPointerException("text == null || word == null");
+        }
 
+        text = text.toLowerCase();
+        word = word.toLowerCase();
 
-        return new int[0];
+        int counter = 0;
+
+        LinkedList<Integer> indexes = new LinkedList();
+        for (String strText : text.split(" ")) {
+            counter++;
+            if (strText.matches("(.)" + word + "(.)")) {
+                indexes.add(counter);
+            }
+        }
+
+        int[] array = new int[indexes.size()];
+        for (int i = 0; i < indexes.size(); i++) {
+            array[i] = indexes.get(i);
+        }
+        return array;
     }
 
     @Override
     public double[] findNumbers(String text) throws CustomException {
 
-
-        Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(text);
-        ArrayList<Double> doubles = new ArrayList<>();
+        Pattern pat = Pattern.compile("[-]?[0-9]+(.[0-9]+)?");
+        Matcher m = pat.matcher(text);
+        ArrayList<String> doubles = new ArrayList<>();
         while (m.find()) {
-            double d = Double.parseDouble(m.group(1));
-            doubles.add(d);
+            doubles.add(m.group());
         }
-        Double[] doubles1 = new Double[doubles.size()];
+        if (doubles.size()==0){
+            throw new CustomException("Numbers not found here");
+
+        }
+        double[] numbers = new double[doubles.size()];
         for (int i = 0; i < doubles.size(); i++) {
-            doubles1[i] = Double.valueOf(doubles.get(i));
+            numbers[i] = Double.parseDouble(doubles.get(i));
         }
 
-        return new double[0];
+        return numbers;
     }
 }
